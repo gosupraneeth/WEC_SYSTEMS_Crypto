@@ -11,45 +11,67 @@
 #L1 after decoding using the e5, e4, e3, e2 and e1 we will get -----  welcomepotentialwebclubrecruit    ---->so this is the final answer
 
 
-#NOTE : This the normal(basic) code for 'encoding' using base 64
-#def e5(s):
-#	st=''
-#	binary=''
-#	equ=0
-#	for i in range(len(s)):
-#		temps=str(bin(ord(s[i])).replace("0b",""))
-#		while(len(temps)<8):
-#			temps='0'+temps
-#		binary=binary+temps
-#	temps=''
-#	temps2=''
-#	k=len(binary)%24
-#	if(k>0):
-#		equ=4-(k//6+1)
-#		for j in range(6):
-#			if(len(binary)-(k%6)+j <len(binary)):
-#				temps=temps+binary[len(binary)-(k%6)+j]
-#			else:
-#				temps=temps+'0'
-#	for i in range((len(binary)//6)*6):
-#		if((i+1)%6!=0):
-#			temps2=temps2+binary[i]
-#		else:
-#			temps2=temps2+binary[i]
-#			st=st+chr(int(temps2,2))
-#			temps2=''
-#	st=st+chr(int(temps,2))
-#	for i in range(equ):
-#		st=st+'='
-#	return st
 
-import base64
-def e5(s):                              #This is base 64 format
-	data=base64.b64decode(s)
-	data=str(data).replace("'",'')
-	data='0'+data
-	data=data.replace('0b','')
-	return data
+#This is base 64 format using inbuilt library
+#import base64
+#def e5(s):                              
+#	data=base64.b64decode(s)
+#	data=str(data).replace("'",'')
+#	data='0'+data
+#	data=data.replace('0b','')
+#	return data
+
+#NOTE : This the normal(basic) code for 'decoding' using base 64
+def e5(s):
+	st=''
+	binary=''
+	equ=0
+	for i in range(((len(s)-1)//4)*4):
+		if(ord(s[i])>=65 and ord(s[i])<=90):
+			k=ord(s[i])-65
+		elif(ord(s[i])>=97 and ord(s[i])<=122):
+			k=ord(s[i])-97+26
+		elif(ord(s[i])>=48 and ord(s[i])<=57):
+			k=ord(s[i])-48+52
+		elif(ord(s[i])==43):
+			k=ord(s[i])-43+62
+		elif(ord(s[i])==47):
+			k=ord(s[i])-47+63
+		temps=str(bin(k).replace("0b",""))
+		while(len(temps)<6):
+			temps='0'+temps
+		binary=binary+temps
+	temps1=''
+	for i in range(len(s)-4,len(s)):
+		if(s[i]!='='):
+			if(ord(s[i])>=65 and ord(s[i])<=90):
+				k=ord(s[i])-65
+			elif(ord(s[i])>=97 and ord(s[i])<=122):
+				k=ord(s[i])-97+26
+			elif(ord(s[i])>=48 and ord(s[i])<=57):
+				k=ord(s[i])-48+52
+			elif(ord(s[i])==43):
+				k=ord(s[i])-43+62
+			elif(ord(s[i])==47):
+				k=ord(s[i])-47+63
+			temps=str(bin(k).replace("0b",""))
+			while(len(temps)<6):
+				temps='0'+temps
+			temps1=temps1+temps
+	for i in range((len(temps1)//8)*8):
+		binary=binary+temps1[i]
+	temps2=''
+	for i in range((len(binary)//8)*8):
+		if((i+1)%8!=0):
+			temps2=temps2+binary[i]
+		else:
+			temps2=temps2+binary[i]
+			st=st+chr(int(temps2,2))
+			temps2=''
+
+	return st
+
+
 
 def e4(s):                               #This is shift or caesar cipher with key=13
 	st=''
@@ -100,7 +122,14 @@ def e1(s):                                   #This is Playfair cipher with key='
 	l=[]
 	temps=[]
 	st=''
-	key='natdszgrqhebvpmxilfywcuko'          #This code is for the this fixed key only
+	key='natdszgrqhebvpmxilfywcuko'          
+	for  i in range(25):                      #This for loop will make the key proper of size 25 **This is not for this because the give key is 25 size alredy                   
+		if(len(key)<25): 
+			if(i>=9):                         #Here j is excluded in key (mostly j is not included in the key)
+				i=i+1
+			k=97+i
+			if(key.find(chr(k))==-1):
+				key=key+chr(k)
 	for i in range(len(key)):
 		temps.append(key[i])
 		if((i+1)%5==0):
