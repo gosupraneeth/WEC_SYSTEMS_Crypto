@@ -73,7 +73,7 @@ def e5(s):
 
 
 
-def e4(s):                               #This is shift or caesar cipher with key=13
+def e4(s):                               #This is shift or caesar cipher with key=13 (ROT-13)
 	st=''
 	for i in range(len(s)):
 		if(ord(s[i])>=97):
